@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 
 // C++ libraries
+// change
 #include <iostream>
 #include <map>
 #include <set>
@@ -20,5 +21,6 @@
 #include <GL/glut.h>
 
 // ao and mpg123 libraries (audio)
+// change 2
 #include <ao/ao.h>
 #include <mpg123.h>

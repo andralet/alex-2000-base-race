@@ -1,4 +1,4 @@
-typedef unsigned char Key;
+typedef std::pair <int, bool> Key; // int code; bool isSpecial;
 typedef int KeyUsage;
 
 std::map <Key, std::set <KeyUsage>> KEY_USAGES;
@@ -16,13 +16,15 @@ const KeyUsage MIN_KEY_USAGE_ID = 1,
                KEY_CHANGE_TRACK = 7,
                MAX_KEY_USAGE_ID = KEY_CHANGE_TRACK;
 
-const int MAX_KEYS_PER_USAGE = 4;
+const int KEYS_PER_USAGE = 3,
+          NO_KEY = '\0';
 
-const Key INIT_KEYS[MAX_KEY_USAGE_ID - MIN_KEY_USAGE_ID + 1][MAX_KEYS_PER_USAGE] =
-    {{'a', 'A'},
-     {'d', 'D'},
-     {'\033'},
-     {'p', 'P'},
-     {'q', 'Q'},
-     {'q', 'Q'},
-     {'e', 'E'}};
+const Key INIT_KEYS[MAX_KEY_USAGE_ID - MIN_KEY_USAGE_ID + 1][KEYS_PER_USAGE] = {
+    {   {'a', 0},    {'A', 0},  {GLUT_KEY_LEFT, 1}},
+    {   {'d', 0},    {'D', 0}, {GLUT_KEY_RIGHT, 1}},
+    {{'\033', 0}, {NO_KEY, 0},         {NO_KEY, 0}},
+    {   {'p', 0},    {'P', 0},    {GLUT_KEY_F1, 1}},
+    {   {'q', 0},    {'Q', 0},         {NO_KEY, 0}},
+    {   {'q', 0},    {'Q', 0},         {NO_KEY, 0}},
+    {   {'e', 0},    {'E', 0},         {NO_KEY, 0}}
+};

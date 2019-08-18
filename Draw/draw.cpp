@@ -17,6 +17,8 @@ void DrawRoad(void) {
     glVertex3f(WINDOW_WIDTH / 2, 0, PERSPECTIVE_DEPTH);
     glEnd();
 
+    // DEBUG
+    //for (double depth = -2 * TREE_DISTANCE; depth <= 2 * DRAW_ROAD_DEPTH + ENV_START_DEPTH; depth += TREE_DISTANCE) {
     for (double depth = 2 * DRAW_ROAD_DEPTH + ENV_START_DEPTH; depth >= -2 * TREE_DISTANCE; depth -= TREE_DISTANCE) {
         DrawTree(TREE_X, depth);
         DrawTree(WINDOW_WIDTH - TREE_X, depth);
@@ -115,7 +117,7 @@ void DrawText(int x, int y, const char *text, Color textColor) {
 
 void Display(void) {
     glClearColor(0, 0.75, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     DrawSky();
 
@@ -131,6 +133,9 @@ void Display(void) {
               (WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, 10.0,
               0, 1, 0);
 
+    // EXPERIMENTAL. Doesn't work yet:(
+    // glDepthRange(0, PERSPECTIVE_DEPTH);
+
     DrawRoad();
     int i = enemyEnd - 1;
     while (i >= 0 && enemy[i].GetDepth() > 0) { // it's not the best way, but for some time
@@ -145,5 +150,6 @@ void Display(void) {
 
     DrawHUD();
 
+    glutSwapBuffers();
     glFinish();
 }

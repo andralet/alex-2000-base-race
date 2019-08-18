@@ -1,3 +1,6 @@
+const int BASE_WINDOW_WIDTH = 800,
+          BASE_WINDOW_HEIGHT = 600;
+
 const double ROAD_WIDTH_K = 60.0/80.0,
              MOVE_SPEED_K = 1.0/80.0,
              CAR_WIDTH_K = 5.0/80.0,
@@ -13,6 +16,7 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 
              PERSPECTIVE_DEPTH_K = 10000.0 / 80.0,
              DRAW_ROAD_DEPTH_K = 1000.0 / 80.0,
+             FOG_DENSITY_K = 0.00016 * 800.0,
              LINE_DEPTH_K = 5.0/80.0,
              LINE_SPACE_K = 20.0/80.0,
              EYE_DEPTH_K = -10.0/80.0;
@@ -32,6 +36,7 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 
 #define         PERSPECTIVE_DEPTH (       PERSPECTIVE_DEPTH_K *  WINDOW_WIDTH)
 #define           DRAW_ROAD_DEPTH (         DRAW_ROAD_DEPTH_K *  WINDOW_WIDTH)
+#define               FOG_DENSITY (             FOG_DENSITY_K /  WINDOW_WIDTH)
 #define                LINE_DEPTH (              LINE_DEPTH_K *  WINDOW_WIDTH)
 #define                LINE_SPACE (              LINE_SPACE_K *  WINDOW_WIDTH)
 #define                 EYE_DEPTH (               EYE_DEPTH_K *  WINDOW_WIDTH)

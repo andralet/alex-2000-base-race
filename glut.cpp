@@ -3,6 +3,9 @@ void Reshape(int width, int height) {
     WINDOW_HEIGHT = height;
 
     glViewport(0, 0, width, height);
+    glFogf(GL_FOG_DENSITY, FOG_DENSITY);
+    // EXPERIMENTAL. Don't work yet:(
+    // glDepthRange(0, PERSPECTIVE_DEPTH);
 }
 
 void CompileDrawCar(void) {
@@ -61,23 +64,27 @@ void CompileDrawTree(void) {
 
 void InitGlut(int argc, char *argv[]) {
     glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    // But Z-buffer don't work. I don't know why :(
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutCreateWindow(WINDOW_NAME);
 
     glutDisplayFunc(Display);
     glutIdleFunc(Play);
     glutReshapeFunc(Reshape);
-    glutKeyboardFunc(Keyboard);
+    glutKeyboardFunc(KeyboardNormalHandler);
+    glutSpecialFunc(KeyboardSpecialHandler);
     // no glutMouseFunc
+
+    glutSetCursor(GLUT_CURSOR_NONE);
 
     GLfloat FogColor[4]={0.5, 0.5, 0.5, 1};
     glEnable(GL_FOG);
-    glFogi(GL_FOG_MODE,GL_EXP2);
-    glFogf(GL_FOG_DENSITY, 0.0001);
-    glFogfv(GL_FOG_COLOR,FogColor);
+    glFogi(GL_FOG_MODE, GL_EXP2);
+    glFogf(GL_FOG_DENSITY, FOG_DENSITY);
+    glFogfv(GL_FOG_COLOR, FogColor);
     CompileDrawCar();
     CompileDrawTree();
-    
+
 	InitKeyboard();
 }

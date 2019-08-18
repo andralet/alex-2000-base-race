@@ -9,9 +9,9 @@
     int REDRAWS_PER_SEC = 0;
     int OLD_FPS = 0;
 
-    GLint WINDOW_WIDTH = 800,
-          WINDOW_HEIGHT = 600;
     #include "Draw/draw.hpp"
+    GLint WINDOW_WIDTH = BASE_WINDOW_WIDTH,
+          WINDOW_HEIGHT = BASE_WINDOW_HEIGHT;
 
     const int CAR_DEPTH = 12,
               ROAD_DEPTH = 2000 + CAR_DEPTH;
@@ -21,7 +21,7 @@
     bool PAUSED = 0,
          CRASHED = 0;
     bool MOVE_AVIABLE = 1;
-    const double TARGET_FPS = 60.0,
+    const double TARGET_FPS = 65.0,
                  USEC_IN_SEC = 1000000.0;
 
     const int RAND_PARTS = RAND_MAX,
@@ -31,13 +31,13 @@
            CHANCE_ADD = CAR_CHANCE / 2500.0;
 
     int score = 0;
-// color.cpp
+// Draw/color.cpp
     struct Color;
     // list of some useful colors in "color.cpp"
     inline void SetColor(const Color &color);
     #include "Draw/color.cpp"
 
-// hero.cpp
+// Player/hero.cpp
     class Hero;
     // Hero hero;
     const Color HERO_COLOR = LIGHT_BLUE,
@@ -55,7 +55,7 @@
     inline bool CanPlay(void);
     void Play(void);
 
-// draw.cpp
+// Draw/draw.cpp
     void DrawRoad(void);
     void DrawSky(void);
     void DrawHelp(Color textColor, double startY);
@@ -73,10 +73,13 @@
     void Reshape(int width, int height);
     void InitGlut(int argc, char *argv[]);
 
-// keyboard.cpp
+// Player/keyboard.cpp
+    bool IsKeySet(Key key);
     void InitKeyboard(void);
     inline bool HasUsage(Key key, KeyUsage usage);
     void Keyboard(Key key, int x, int y);
+    void KeyboardNormalHandler(unsigned char key, int x, int y);
+    void KeyboardSpecialHandler(int key, int x, int y);
 
 // audio daemon
     #include "Audio/audio.hpp"

@@ -14,7 +14,7 @@ class Hero {
     }
 
     void Draw(void) {
-        DrawCar(x * WINDOW_WIDTH, 0, HERO_COLOR, HERO_LINE_COLOR);
+        DrawCar(x * WINDOW_WIDTH, 0, HERO_COLOR, HERO_LINE_COLOR, 1);
     }
 
     inline double GetX(void) const {

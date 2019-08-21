@@ -3,12 +3,12 @@ class Car {
     double x, depth;
    public:
     Car(void):
-        x(double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH)) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH)),
+        x(double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH)),
         depth(ROAD_DEPTH - CAR_DEPTH)
         {}
 
     void ReInit(void) {
-        x = double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH)) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH);
+        x = double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH);
         depth = ROAD_DEPTH - CAR_DEPTH;
     }
 
@@ -39,14 +39,14 @@ class Car {
 
     bool Bumps(const Hero &hero) {
         return (depth >= -CAR_DEPTH && depth <= CAR_DEPTH &&
-                x + CAR_WIDTH / 2.0 / WINDOW_WIDTH >= hero.GetX() - CAR_WIDTH / 2.0 / WINDOW_WIDTH &&
-                x - CAR_WIDTH / 2.0 / WINDOW_WIDTH <= hero.GetX() + CAR_WIDTH / 2.0 / WINDOW_WIDTH);
+                x + CAR_WIDTH_K / 2.0 >= hero.GetX() - CAR_WIDTH_K / 2.0 &&
+                x - CAR_WIDTH_K / 2.0 <= hero.GetX() + CAR_WIDTH_K / 2.0);
     }
 
     bool Bumps(const Car &car) {
         return (car.GetDepth() - depth >= -CAR_DEPTH && car.GetDepth() - depth <= CAR_DEPTH &&
-                x + CAR_WIDTH / 2.0 / WINDOW_WIDTH >= car.GetX() - CAR_WIDTH / 2.0 / WINDOW_WIDTH &&
-                x - CAR_WIDTH / 2.0 / WINDOW_WIDTH <= car.GetX() + CAR_WIDTH / 2.0 / WINDOW_WIDTH);
+                x + CAR_WIDTH_K / 2.0 >= car.GetX() - CAR_WIDTH_K / 2.0 &&
+                x - CAR_WIDTH_K / 2.0 <= car.GetX() + CAR_WIDTH_K / 2.0);
     }
 } enemy[MAX_ENEMY];
 

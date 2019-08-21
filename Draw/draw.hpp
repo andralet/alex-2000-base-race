@@ -11,8 +11,9 @@ const double ROAD_WIDTH_K = 60.0/80.0,
              TREE_RADIUS_K = 2.0/80.0,
              LEAVES_RADIUS_K = 10.0/80.0,
              LEAVES_TREE_CONNECT_SIZE_K = 1.0/80.0,
-             TREE_DISTANCE_K = 50.0/80.0,
-             TREE_X_K = 80.0 / 80.0,
+             TREE_DISTANCE_K = 100.0/80.0,
+             TREE_X_K = 100.0 / 80.0,
+             TREE_SCALE_K = 2.0 / 80.0,
 
              PERSPECTIVE_DEPTH_K = 10000.0 / 80.0,
              DRAW_ROAD_DEPTH_K = 1000.0 / 80.0,
@@ -33,6 +34,7 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define  LEAVES_TREE_CONNECT_SIZE (LEAVES_TREE_CONNECT_SIZE_K *  WINDOW_WIDTH)
 #define             TREE_DISTANCE (           TREE_DISTANCE_K *  WINDOW_WIDTH)
 #define                    TREE_X (                  TREE_X_K *  WINDOW_WIDTH)
+#define                TREE_SCALE (              TREE_SCALE_K *  WINDOW_WIDTH)
 
 #define         PERSPECTIVE_DEPTH (       PERSPECTIVE_DEPTH_K *  WINDOW_WIDTH)
 #define           DRAW_ROAD_DEPTH (         DRAW_ROAD_DEPTH_K *  WINDOW_WIDTH)
@@ -40,6 +42,7 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define                LINE_DEPTH (              LINE_DEPTH_K *  WINDOW_WIDTH)
 #define                LINE_SPACE (              LINE_SPACE_K *  WINDOW_WIDTH)
 #define                 EYE_DEPTH (               EYE_DEPTH_K *  WINDOW_WIDTH)
+
 
 const int TREE_SLICES = 10,
           TREE_STACKS = 1,
@@ -54,7 +57,7 @@ const double SPEED_DRAW_MUL = 10.0;
 const int MAX_DRAW_TEXT = 128,
           FONT_SIZE = 24;
 
-const char *WINDOW_NAME = "Race (by alex2000)";
+const char *WINDOW_NAME = "Race (by andralet)";
 const int HELP_LINES_NUM = 4;
 const char *HELP_MESSAGE[HELP_LINES_NUM] = {
     "Use 'A' and 'D' to move,",

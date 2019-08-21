@@ -67,7 +67,8 @@ void DrawHUD(void) {
         if (!WAS_PAUSED) {
             OLD_FPS = REDRAWS_PER_SEC;
         }
-        WAS_PAUSED = 0;
+        if (!PAUSED)
+            WAS_PAUSED = 0;
         REDRAWS_PER_SEC = 0;
         LAST_TIME = time(NULL);
     }
@@ -85,26 +86,33 @@ void DrawHUD(void) {
     }
 }
 
-void DrawCar(int x, int depth, Color carColor, Color lineColor) {
+void DrawCar(int x, int depth, Color carColor, Color lineColor, bool isPlayer) {
     // xLeft and xRight fixed to use with gluPerspective
-    double xLeft  = (WINDOW_WIDTH + ROAD_WIDTH - CAR_WIDTH) / 2 - x;
-    double drawCloseDepth = double(depth) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
+    double xLeft = (WINDOW_WIDTH + ROAD_WIDTH - CAR_WIDTH) / 2 - x;
+    double drawDepth = double(depth + CAR_DEPTH / 2.0) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
     SetColor(carColor);
     glPushMatrix();
-    glTranslatef(xLeft, 0.0, drawCloseDepth);
-    glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
+    glTranslatef(xLeft + CAR_WIDTH / 2.0, 0.0, drawDepth);
+    if (!isPlayer)
+        glRotatef(180.0, 0.0, 1.0, 0.0);
+    //glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
+    glScalef(CAR_SCALE.x / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH, CAR_SCALE.y / double(BASE_WINDOW_HEIGHT) * WINDOW_HEIGHT, CAR_SCALE.z / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH); // because of rotation
     glCallList(DRAW_CAR_BODY_LIST);
 
-    SetColor(lineColor);
-    glCallList(DRAW_CAR_LINES_LIST);
+    //SetColor(lineColor);
+    //glCallList(DRAW_CAR_LINES_LIST);
     glPopMatrix();
 }
 
 void DrawTree(int x, int depth) {
     glPushMatrix();
-    glTranslatef(x, TREE_HEIGHT, depth);
-    glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
-    glCallList(DRAW_TREE_LIST);
+    glTranslatef(x, 0, depth);
+    //glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
+    glScalef(TREE_SCALE, TREE_SCALE, TREE_SCALE);
+    SetColor(TREE_COLOR);
+    glCallList(3);
+    SetColor(LEAVES_COLOR);
+    glCallList(4);
     glPopMatrix();
 }
 

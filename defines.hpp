@@ -13,7 +13,7 @@
     GLint WINDOW_WIDTH = BASE_WINDOW_WIDTH,
           WINDOW_HEIGHT = BASE_WINDOW_HEIGHT;
 
-    const int CAR_DEPTH = 12,
+    const int CAR_DEPTH = 20, // 24, // firstly, was 12,
               ROAD_DEPTH = 2000 + CAR_DEPTH;
     double CAR_SPEED = 3.0,
            SPEED_ADD = CAR_SPEED / 2500.0;
@@ -60,10 +60,46 @@
     void DrawSky(void);
     void DrawHelp(Color textColor, double startY);
     void DrawHUD(void);
-    void DrawCar(int x, int depth, Color carColor, Color lineColor = WHITE);
+    void DrawCar(int x, int depth, Color carColor, Color lineColor = WHITE, bool isPlayer = 0);
     void DrawTree(int x, int depth);
     void DrawText(int x, int y, const char *text, Color textColor = WHITE);
     void Display(void);
+
+// Draw/obj.cpp
+    struct Vertex {
+        double x, y, z;
+    };
+
+    struct Triangle {
+        int vertex[3]; // vertex id
+    };
+
+    struct ImageScale {
+        double x, y, z;
+    };
+
+    const int MAX_OBJ_CMD_SIZE = 256;
+    const double INF_COORD = 1e9,
+                 DFL_WIDTH = 100.0,
+                 DFL_HEIGHT = 100.0,
+                 DFL_DEPTH = 100.0;
+
+    void CreateList(int listId, const std::vector <Vertex> &v, const std::vector <Triangle> &f);
+    void CopyList(int src, int dst);
+    void UpdateMinMaxCoord(const Vertex &v, Vertex &minCoord, Vertex &maxCoord);
+    // Just basic .obj format is supported for loading (you can look for examples in Draw/Models)
+    // In Blender options are: Apply Modifiers, Objects as OBJ Objects,
+    // Scale - 1.0 (generating later with 'make config', I think, is better), Path Mode - Auto, Forward - -Z Forward, Up - Y Up
+    bool LoadObj(const char *filename, int partNumber, const int listId[], ImageScale &dfl);
+    // Scaleinfo file format: 3 %lf numbers (x, y, z) for default window size
+    bool LoadScaleInfo(const char *filename, ImageScale &scale);
+
+    const char *CAR_OBJ_FILEPATH = "Draw/Models/car.obj",
+               *CAR_SCALE_FILEPATH = "Draw/Models/car.scaleinfo",
+               *TREE_OBJ_FILEPATH = "Draw/Models/tree.obj",
+               *TREE_SCALE_FILEPATH = "Draw/Models/tree.scaleinfo";
+    ImageScale CAR_SCALE = {1, 1, 1},
+               TREE_SIZE = {1, 1, 1};
 
 // glut.cpp
     const int DRAW_CAR_BODY_LIST = 1,
@@ -88,5 +124,6 @@
 #include "Player/hero.cpp"
 #include "play.cpp"
 #include "Draw/draw.cpp"
+#include "Draw/obj.cpp"
 #include "glut.cpp"
 #include "Player/keyboard.cpp"

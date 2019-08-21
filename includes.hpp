@@ -16,6 +16,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <vector>
 
 // openGL & glut libraries (graphic)
 #include <GL/glut.h>

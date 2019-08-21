@@ -6,12 +6,15 @@ CC=g++
 FLAGS=-Wall -Wextra
 PROGRAM=main
 SRC=$(PROGRAM).cpp
+CONFIG_PROGRAM=genScaleInfo
+CONFIG_SRC=$(CONFIG_PROGRAM).cpp
 AUDIO_FIFO=Audio/audio.fifo
 AUDIO_LOG=Audio/audio.log
 
 default:
 	# yes, it works)
 	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(LIBS)
+	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS) $(LIBS)
 
 run: default
 	./$(PROGRAM)
@@ -21,9 +24,10 @@ debug: build-debug
 
 build-debug:
 	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(LIBS) -g
+	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS) $(LIBS) -g
 
-clear: clean
-	# you should use 'make clean' but it's okey too
+config: $(CONFIG_PROGRAM)
+	./$(CONFIG_PROGRAM)
 
 clean:
 	rm ./$(PROGRAM)

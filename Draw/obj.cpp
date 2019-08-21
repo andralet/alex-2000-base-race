@@ -104,7 +104,7 @@ bool LoadObj(const char *filename, int partNumber, const int listId[], ImageScal
 bool LoadScaleInfo(const char *filename, ImageScale &scale) {
     FILE *input = fopen(filename, "r");
     if (input == NULL) {
-        fprintf(stderr, "Error: cannot open file '%s' for reading. Using default scale info.\nNote: you can try to use 'make config'", filename);
+        fprintf(stderr, "Error: cannot open file '%s' for reading. Using default scale info.\nNote: you can try to use 'make auto-config' or 'make config' if the first didn't help\n", filename);
         return 0;
     }
     fscanf(input, "%lf %lf %lf", &(scale.x), &(scale.y), &(scale.z));

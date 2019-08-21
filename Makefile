@@ -7,6 +7,7 @@ FLAGS=-Wall -Wextra
 PROGRAM=main
 SRC=$(PROGRAM).cpp
 CONFIG_PROGRAM=genScaleInfo
+CONFIG_AUTO_OPTION=auto
 CONFIG_SRC=$(CONFIG_PROGRAM).cpp
 AUDIO_FIFO=Audio/audio.fifo
 AUDIO_LOG=Audio/audio.log
@@ -28,6 +29,9 @@ build-debug:
 
 config: $(CONFIG_PROGRAM)
 	./$(CONFIG_PROGRAM)
+
+auto-config: $(CONFIG_PROGRAM)
+	./$(CONFIG_PROGRAM) $(CONFIG_AUTO_OPTION)
 
 clean:
 	rm ./$(PROGRAM)

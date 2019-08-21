@@ -8,13 +8,17 @@ void Reshape(int width, int height) {
     // glDepthRange(0, PERSPECTIVE_DEPTH);
 }
 
+void ScaleModel(ImageScale scale) {
+    glScalef(scale.x / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH, scale.y / double(BASE_WINDOW_HEIGHT) * WINDOW_HEIGHT, scale.z / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH);
+}
+
 void CompileDrawCar(void) {
     const int LOAD_PARTS[1] = {1};
     if (!LoadObj(CAR_OBJ_FILEPATH, 1, LOAD_PARTS, CAR_SCALE)) {
-        double xLeft  = 0,
-               xRight = CAR_WIDTH_K;
-        double drawCloseDepth = 0;
-        double drawFarDepth = double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH_K;
+        double xLeft  = -CAR_WIDTH_K / 2,
+               xRight = CAR_WIDTH_K / 2;
+        double drawCloseDepth = double(-CAR_DEPTH) / 2.0 / ROAD_DEPTH * DRAW_ROAD_DEPTH_K;
+        double drawFarDepth = double(CAR_DEPTH) / 2.0 / ROAD_DEPTH * DRAW_ROAD_DEPTH_K;
         glNewList(DRAW_CAR_BODY_LIST, GL_COMPILE); {
             glBegin(GL_QUAD_STRIP);
             glVertex3f(xLeft, 0, drawCloseDepth);
@@ -49,6 +53,9 @@ void CompileDrawCar(void) {
             glVertex3f(xRight, CAR_HEIGHT_K, drawFarDepth);
             glEnd();
         } glEndList();
+        CAR_SCALE.x = BASE_WINDOW_WIDTH;
+        CAR_SCALE.y = BASE_WINDOW_HEIGHT;
+        CAR_SCALE.z = BASE_WINDOW_WIDTH;
     }
     else {
         LoadScaleInfo(CAR_SCALE_FILEPATH, CAR_SCALE);
@@ -57,10 +64,11 @@ void CompileDrawCar(void) {
 
 void CompileDrawTree(void) {
     const int LOAD_PARTS[2] = {3, 4};
-    if (!LoadObj(TREE_OBJ_FILEPATH, 2, LOAD_PARTS, TREE_SIZE)) {
+    if (!LoadObj(TREE_OBJ_FILEPATH, 2, LOAD_PARTS, TREE_SCALE)) {
         GLUquadricObj *tree = gluNewQuadric();
         glNewList(DRAW_TREE_LIST, GL_COMPILE); {
             SetColor(TREE_COLOR);
+            glTranslatef(0.0, TREE_HEIGHT_K, 0.0);
             glRotatef(90.0, 1.0, 0.0, 0.0);
             gluCylinder(tree, TREE_RADIUS_K, TREE_RADIUS_K, TREE_HEIGHT_K, TREE_SLICES, TREE_STACKS);
 
@@ -68,6 +76,12 @@ void CompileDrawTree(void) {
             glTranslatef(0.0, 0.0, - (LEAVES_RADIUS_K - LEAVES_TREE_CONNECT_SIZE_K)); // in rotated matrix coordinates
             gluSphere(tree, LEAVES_RADIUS_K, LEAVES_SLICES, LEAVES_STACKS);
         } glEndList();
+        TREE_SCALE.x = BASE_WINDOW_WIDTH;
+        TREE_SCALE.y = BASE_WINDOW_HEIGHT;
+        TREE_SCALE.z = BASE_WINDOW_WIDTH;
+    }
+    else {
+        LoadScaleInfo(TREE_SCALE_FILEPATH, TREE_SCALE);
     }
 }
 

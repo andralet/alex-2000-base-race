@@ -98,14 +98,16 @@
                *CAR_SCALE_FILEPATH = "Draw/Models/car.scaleinfo",
                *TREE_OBJ_FILEPATH = "Draw/Models/tree.obj",
                *TREE_SCALE_FILEPATH = "Draw/Models/tree.scaleinfo";
-    ImageScale CAR_SCALE = {1, 1, 1},
-               TREE_SIZE = {1, 1, 1};
+    ImageScale CAR_SCALE = {BASE_WINDOW_WIDTH, BASE_WINDOW_HEIGHT, BASE_WINDOW_WIDTH},
+               TREE_SCALE = {BASE_WINDOW_WIDTH, BASE_WINDOW_HEIGHT, BASE_WINDOW_WIDTH};
 
 // glut.cpp
     const int DRAW_CAR_BODY_LIST = 1,
               DRAW_CAR_LINES_LIST = 2,
               DRAW_TREE_LIST = 3;
+    void ScaleModel(ImageScale scale);
     void CompileDrawCar(void);
+    void CompileDrawTree(void);
     void Reshape(int width, int height);
     void InitGlut(int argc, char *argv[]);
 

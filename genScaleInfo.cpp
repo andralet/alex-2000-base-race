@@ -10,6 +10,7 @@ const char *OBJ_FILE_LIST[OBJ_FILE_NUM] = {CAR_OBJ_FILEPATH, TREE_OBJ_FILEPATH};
 bool LoadObjSize(const char *filename, ImageScale &size);
 bool GenScaleFileName(const char *objFile, char *dstFile);
 bool GenScaleInfo(const char *filename);
+bool AutoGenScaleInfo(const char *filename, ImageScale sizes);
 
 bool LoadObjSize(const char *filename, ImageScale &size) {
     std::vector <Vertex> v;
@@ -80,7 +81,7 @@ bool GenScaleFileName(const char *objFile, char *dstFile) {
 
 bool GenScaleInfo(const char *filename) {
     ImageScale dflSize = {1.0, 1.0, 1.0};
-    printf("Loading '%s'\n", filename);
+    printf("\nLoading '%s'...\n", filename);
     LoadObjSize(filename, dflSize);
 
     ImageScale scale = {BASE_WINDOW_WIDTH / dflSize.x, BASE_WINDOW_HEIGHT / dflSize.y, BASE_WINDOW_WIDTH / dflSize.z};
@@ -88,7 +89,7 @@ bool GenScaleInfo(const char *filename) {
 
     printf("Note: onscreen sizes could be found in 'defines.hpp'. In (x, y, z) format:\n");
     printf("Car : (%.1lf, %.1lf, %.1lf)\n", CAR_WIDTH, CAR_HEIGHT, double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH);
-    // printf("Tree: (%.1lf, %.1lf, %.1lf)\n\n", TREE_SCALE, TREE_SCALE, TREE_SCALE);
+    printf("Tree: (%.1lf, %.1lf, %.1lf)\n", TREE_OBJ_X, TREE_OBJ_Y, TREE_OBJ_Z);
 
     printf("Specify characteristic size for X axis or '0' for default (%lf): ", dflSize.x);
     scanf("%lf", &baseSize);
@@ -137,21 +138,57 @@ bool GenScaleInfo(const char *filename) {
     return 1;
 }
 
-int main(void) {
+bool AutoGenScaleInfo(const char *filename, ImageScale sizes) {
+    ImageScale dflSize = {1.0, 1.0, 1.0};
+    printf("\nLoading '%s'...\n", filename);
+    LoadObjSize(filename, dflSize);
+
+    ImageScale scale = {sizes.x / dflSize.x, sizes.y / dflSize.y, sizes.z / dflSize.z};
+    printf("Scale set to (x, y, z): %.1lf, %.1lf, %.1lf\nSaving...\n", scale.x, scale.y, scale.z);
+
+    char *dstFile = new char[MAX_FILEPATH];
+    if (!GenScaleFileName(filename, dstFile)) {
+        printf("Cannot generate output filename. Please, specify it manually: ");
+        scanf("%s", dstFile);
+    }
+
+    FILE *output = fopen(dstFile, "w");
+    if (output == NULL) {
+        printf("Error: cannot create/clear file '%s'. Scale information not saved.\n", dstFile);
+        return 0;
+    }
+    fprintf(output, "%lf %lf %lf", scale.x, scale.y, scale.z);
+    fclose(output);
+    printf("Scale info successfuly saved to '%s'\n", dstFile);
+    return 1;
+}
+
+int main(int argc, char *argv[]) {
     bool success = 1;
     char *cmd = new char[MAX_FILEPATH];
     cmd[0] = '\0';
-    while (strcmp(cmd, "exit") != 0) {
-        printf("Specify .obj file path ('Draw/Models/<filename>')\nOr type 'all' to scale all known\nWhen everything is done type 'exit' to exit: ");
-        scanf("%s", cmd);
-        if (strcmp(cmd, "all") == 0) {
-            for (int i = 0; i < OBJ_FILE_NUM; i++)
-                success &= GenScaleInfo(OBJ_FILE_LIST[i]);
+    if (argc != 2 || strcmp(argv[1], "auto") != 0) {
+        while (strcmp(cmd, "exit") != 0) {
+            printf("Specify .obj file path ('Draw/Models/<filename>')\nOr type 'all' to scale all known\nWhen everything is done type 'exit' to exit: ");
+            scanf("%s", cmd);
+            if (strcmp(cmd, "all") == 0) {
+                for (int i = 0; i < OBJ_FILE_NUM; i++)
+                    success &= GenScaleInfo(OBJ_FILE_LIST[i]);
+            }
+            else if (strcmp(cmd, "exit") == 0)
+                break;
+            else
+                success &= GenScaleInfo(cmd);
         }
-        else if (strcmp(cmd, "exit") == 0)
-            break;
-        else
-            success &= GenScaleInfo(cmd);
+    }
+    else {
+        ImageScale sizes;
+        // car
+        sizes.x = CAR_WIDTH; sizes.y = CAR_HEIGHT; sizes.z = double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
+        success &= AutoGenScaleInfo(CAR_OBJ_FILEPATH, sizes);
+        // tree
+        sizes.x = TREE_OBJ_X; sizes.y = TREE_OBJ_Y; sizes.z = TREE_OBJ_Z;
+        success &= AutoGenScaleInfo(TREE_OBJ_FILEPATH, sizes);
     }
 
     delete[] cmd;

@@ -7,13 +7,16 @@ const double ROAD_WIDTH_K = 60.0/80.0,
              LINE_WIDTH_K = 6.0/80.0,
              CAR_HEIGHT_K = 6.0/60.0,
 
-             TREE_HEIGHT_K = 10.0/60.0,
-             TREE_RADIUS_K = 2.0/80.0,
-             LEAVES_RADIUS_K = 10.0/80.0,
-             LEAVES_TREE_CONNECT_SIZE_K = 1.0/80.0,
+             TREE_HEIGHT_K = 15.0/60.0,
+             TREE_RADIUS_K = 3.0/80.0,
+             LEAVES_RADIUS_K = 15.0/80.0,
+             LEAVES_TREE_CONNECT_SIZE_K = 1.5/80.0,
              TREE_DISTANCE_K = 100.0/80.0,
              TREE_X_K = 100.0 / 80.0,
-             TREE_SCALE_K = 2.0 / 80.0,
+
+             TREE_OBJ_X_K = 40.2/80.0, // just the sizes I liked most of all
+             TREE_OBJ_Y_K = 40.0/60.0, // just the sizes I liked most of all
+             TREE_OBJ_Z_K = 47.8/80.0, // just the sizes I liked most of all
 
              PERSPECTIVE_DEPTH_K = 10000.0 / 80.0,
              DRAW_ROAD_DEPTH_K = 1000.0 / 80.0,
@@ -34,7 +37,10 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define  LEAVES_TREE_CONNECT_SIZE (LEAVES_TREE_CONNECT_SIZE_K *  WINDOW_WIDTH)
 #define             TREE_DISTANCE (           TREE_DISTANCE_K *  WINDOW_WIDTH)
 #define                    TREE_X (                  TREE_X_K *  WINDOW_WIDTH)
-#define                TREE_SCALE (              TREE_SCALE_K *  WINDOW_WIDTH)
+
+#define                TREE_OBJ_X (              TREE_OBJ_X_K *  WINDOW_WIDTH)
+#define                TREE_OBJ_Y (              TREE_OBJ_Y_K * WINDOW_HEIGHT)
+#define                TREE_OBJ_Z (              TREE_OBJ_Z_K *  WINDOW_WIDTH)
 
 #define         PERSPECTIVE_DEPTH (       PERSPECTIVE_DEPTH_K *  WINDOW_WIDTH)
 #define           DRAW_ROAD_DEPTH (         DRAW_ROAD_DEPTH_K *  WINDOW_WIDTH)

@@ -87,16 +87,14 @@ void DrawHUD(void) {
 }
 
 void DrawCar(int x, int depth, Color carColor, Color lineColor, bool isPlayer) {
-    // xLeft and xRight fixed to use with gluPerspective
-    double xLeft = (WINDOW_WIDTH + ROAD_WIDTH - CAR_WIDTH) / 2 - x;
+    double xCenter = (WINDOW_WIDTH + ROAD_WIDTH) / 2 - x;
     double drawDepth = double(depth + CAR_DEPTH / 2.0) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
     SetColor(carColor);
     glPushMatrix();
-    glTranslatef(xLeft + CAR_WIDTH / 2.0, 0.0, drawDepth);
+    glTranslatef(xCenter, 0.0, drawDepth);
     if (!isPlayer)
         glRotatef(180.0, 0.0, 1.0, 0.0);
-    //glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
-    glScalef(CAR_SCALE.x / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH, CAR_SCALE.y / double(BASE_WINDOW_HEIGHT) * WINDOW_HEIGHT, CAR_SCALE.z / double(BASE_WINDOW_WIDTH) * WINDOW_WIDTH); // because of rotation
+    ScaleModel(CAR_SCALE);
     glCallList(DRAW_CAR_BODY_LIST);
 
     //SetColor(lineColor);
@@ -107,8 +105,7 @@ void DrawCar(int x, int depth, Color carColor, Color lineColor, bool isPlayer) {
 void DrawTree(int x, int depth) {
     glPushMatrix();
     glTranslatef(x, 0, depth);
-    //glScalef(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH);
-    glScalef(TREE_SCALE, TREE_SCALE, TREE_SCALE);
+    ScaleModel(TREE_SCALE);
     SetColor(TREE_COLOR);
     glCallList(3);
     SetColor(LEAVES_COLOR);
@@ -134,6 +131,7 @@ void Display(void) {
     //glOrtho(0, width, 0, height, -1.0, 1000.0);
     gluPerspective(120.0, double(WINDOW_WIDTH) / double(WINDOW_HEIGHT),
                    1.0, PERSPECTIVE_DEPTH);
+    // Be careful: X axis is inverted now!
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

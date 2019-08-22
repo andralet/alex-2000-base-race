@@ -3,12 +3,12 @@ class Car {
     double x, depth;
    public:
     Car(void):
-        x(double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH)),
+        x(double((rand() % (int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1)) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH)),
         depth(ROAD_DEPTH - CAR_DEPTH)
         {}
 
     void ReInit(void) {
-        x = double((rand() % int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH);
+        x = double((rand() % (int((ROAD_WIDTH - CAR_WIDTH) / LINE_WIDTH) + 1)) * LINE_WIDTH + LINE_WIDTH / 2.0) / double(WINDOW_WIDTH);
         depth = ROAD_DEPTH - CAR_DEPTH;
     }
 

@@ -7,12 +7,19 @@ const double ROAD_WIDTH_K = 60.0/80.0,
              LINE_WIDTH_K = 6.0/80.0,
              CAR_HEIGHT_K = 6.0/60.0,
 
-             TREE_HEIGHT_K = 10.0/60.0,
-             TREE_RADIUS_K = 2.0/80.0,
-             LEAVES_RADIUS_K = 10.0/80.0,
-             LEAVES_TREE_CONNECT_SIZE_K = 1.0/80.0,
-             TREE_DISTANCE_K = 50.0/80.0,
-             TREE_X_K = 80.0 / 80.0,
+             TREE_HEIGHT_K = 15.0/60.0,
+             TREE_RADIUS_K = 3.0/80.0,
+             LEAVES_RADIUS_K = 15.0/80.0,
+             LEAVES_TREE_CONNECT_SIZE_K = 1.5/80.0,
+             TREE_DISTANCE_K = 100.0/80.0,
+             TREE_X_K = 100.0 / 80.0,
+
+             TREE_OBJ_X_K = 40.2/80.0, // just the sizes I liked most of all
+             TREE_OBJ_Y_K = 40.0/60.0, // just the sizes I liked most of all
+             TREE_OBJ_Z_K = 47.8/80.0, // just the sizes I liked most of all
+
+             LOW_TREE_DEPTH_K = 1000.0/80.0,
+             LOW_CAR_DEPTH_K  = 1000.0/80.0,
 
              PERSPECTIVE_DEPTH_K = 10000.0 / 80.0,
              DRAW_ROAD_DEPTH_K = 1000.0 / 80.0,
@@ -34,12 +41,20 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define             TREE_DISTANCE (           TREE_DISTANCE_K *  WINDOW_WIDTH)
 #define                    TREE_X (                  TREE_X_K *  WINDOW_WIDTH)
 
+#define                TREE_OBJ_X (              TREE_OBJ_X_K *  WINDOW_WIDTH)
+#define                TREE_OBJ_Y (              TREE_OBJ_Y_K * WINDOW_HEIGHT)
+#define                TREE_OBJ_Z (              TREE_OBJ_Z_K *  WINDOW_WIDTH)
+
+#define            LOW_TREE_DEPTH (          LOW_TREE_DEPTH_K *  WINDOW_WIDTH)
+#define             LOW_CAR_DEPTH (          LOW_CAR_DEPTH_K *  WINDOW_WIDTH)
+
 #define         PERSPECTIVE_DEPTH (       PERSPECTIVE_DEPTH_K *  WINDOW_WIDTH)
 #define           DRAW_ROAD_DEPTH (         DRAW_ROAD_DEPTH_K *  WINDOW_WIDTH)
 #define               FOG_DENSITY (             FOG_DENSITY_K /  WINDOW_WIDTH)
 #define                LINE_DEPTH (              LINE_DEPTH_K *  WINDOW_WIDTH)
 #define                LINE_SPACE (              LINE_SPACE_K *  WINDOW_WIDTH)
 #define                 EYE_DEPTH (               EYE_DEPTH_K *  WINDOW_WIDTH)
+
 
 const int TREE_SLICES = 10,
           TREE_STACKS = 1,
@@ -54,7 +69,7 @@ const double SPEED_DRAW_MUL = 10.0;
 const int MAX_DRAW_TEXT = 128,
           FONT_SIZE = 24;
 
-const char *WINDOW_NAME = "Race (by alex2000)";
+const char *WINDOW_NAME = "Race (by andralet)";
 const int HELP_LINES_NUM = 4;
 const char *HELP_MESSAGE[HELP_LINES_NUM] = {
     "Use 'A' and 'D' to move,",

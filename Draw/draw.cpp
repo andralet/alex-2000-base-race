@@ -9,12 +9,13 @@ void DrawRoad(void) {
     SetColor(WHITE);
     glBegin(GL_LINES);
     for (int i = 1; i < ROAD_WIDTH / LINE_WIDTH; i++)
-        for (int j = 0; ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE) <= 2 * DRAW_ROAD_DEPTH; j++) {
-            glVertex3f((WINDOW_WIDTH - ROAD_WIDTH) / 2 + i * LINE_WIDTH, 0, ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE));
-            glVertex3f((WINDOW_WIDTH - ROAD_WIDTH) / 2 + i * LINE_WIDTH, 0, ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE) + LINE_DEPTH);
-        }
-    glVertex3f(WINDOW_WIDTH / 2, 0, EYE_DEPTH);
-    glVertex3f(WINDOW_WIDTH / 2, 0, PERSPECTIVE_DEPTH);
+        for (int j = 0; ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE) <= 2 * DRAW_ROAD_DEPTH; j++)
+            if (i != int(ROAD_WIDTH / LINE_WIDTH) / 2) {
+                glVertex3f((WINDOW_WIDTH - ROAD_WIDTH) / 2 + i * LINE_WIDTH, SMALL_COORD, ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE));
+                glVertex3f((WINDOW_WIDTH - ROAD_WIDTH) / 2 + i * LINE_WIDTH, SMALL_COORD, ENV_START_DEPTH + j * (LINE_DEPTH + LINE_SPACE) + LINE_DEPTH);
+            }
+    glVertex3f(WINDOW_WIDTH / 2, SMALL_COORD, EYE_DEPTH);
+    glVertex3f(WINDOW_WIDTH / 2, SMALL_COORD, PERSPECTIVE_DEPTH);
     glEnd();
 
     // DEBUG
@@ -25,21 +26,16 @@ void DrawRoad(void) {
     }
 }
 
-void DrawSky(void) {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1.0, 1.0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    SetColor(SKY_COLOR);
+void DrawGround(void) {
+    glDisable(GL_FOG);
+    SetColor(GROUND_COLOR);
     glBegin(GL_QUADS);
-    glVertex2f(           0, 0.5 * WINDOW_HEIGHT);
-    glVertex2f(           0,       WINDOW_HEIGHT);
-    glVertex2f(WINDOW_WIDTH,       WINDOW_HEIGHT);
-    glVertex2f(WINDOW_WIDTH, 0.5 * WINDOW_HEIGHT);
+    glVertex3f(-INF_COORD, -SMALL_COORD, EYE_DEPTH);
+    glVertex3f(-INF_COORD, -SMALL_COORD, PERSPECTIVE_DEPTH);
+    glVertex3f( INF_COORD, -SMALL_COORD, PERSPECTIVE_DEPTH);
+    glVertex3f( INF_COORD, -SMALL_COORD, EYE_DEPTH);
     glEnd();
+    glEnable(GL_FOG);
 }
 
 void DrawHelp(Color textColor, double startY) {
@@ -90,12 +86,19 @@ void DrawCar(int x, int depth, Color carColor, Color lineColor, bool isPlayer) {
     double xCenter = (WINDOW_WIDTH + ROAD_WIDTH) / 2 - x;
     double drawDepth = double(depth + CAR_DEPTH / 2.0) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
     SetColor(carColor);
+    //PushColor(carColor);
     glPushMatrix();
     glTranslatef(xCenter, 0.0, drawDepth);
     if (!isPlayer)
         glRotatef(180.0, 0.0, 1.0, 0.0);
-    ScaleModel(CAR_SCALE);
-    glCallList(DRAW_CAR_BODY_LIST);
+    if (depth < LOW_CAR_DEPTH) {
+        ScaleModel(CAR_SCALE);
+        glCallList(DRAW_CAR_LIST);
+    }
+    else {
+        ScaleModel(LOW_CAR_SCALE);
+        glCallList(DRAW_LOW_CAR_LIST);
+    }
 
     //SetColor(lineColor);
     //glCallList(DRAW_CAR_LINES_LIST);
@@ -105,11 +108,14 @@ void DrawCar(int x, int depth, Color carColor, Color lineColor, bool isPlayer) {
 void DrawTree(int x, int depth) {
     glPushMatrix();
     glTranslatef(x, 0, depth);
-    ScaleModel(TREE_SCALE);
-    SetColor(TREE_COLOR);
-    glCallList(3);
-    SetColor(LEAVES_COLOR);
-    glCallList(4);
+    if (depth < LOW_TREE_DEPTH) {
+        ScaleModel(TREE_SCALE);
+        glCallList(DRAW_TREE_LIST);
+    }
+    else {
+        ScaleModel(LOW_TREE_SCALE);
+        glCallList(DRAW_LOW_TREE_LIST);
+    }
     glPopMatrix();
 }
 
@@ -121,10 +127,8 @@ void DrawText(int x, int y, const char *text, Color textColor) {
 }
 
 void Display(void) {
-    glClearColor(0, 0.75, 0, 1);
+    glClearColor(SKY_COLOR.r, SKY_COLOR.g, SKY_COLOR.b, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    DrawSky();
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -136,13 +140,12 @@ void Display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt((WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, EYE_DEPTH,
-              (WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, 10.0,
+              (WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, EYE_DEPTH + SMALL_COORD,
               0, 1, 0);
 
-    // EXPERIMENTAL. Doesn't work yet:(
-    // glDepthRange(0, PERSPECTIVE_DEPTH);
-
+    DrawGround();
     DrawRoad();
+
     int i = enemyEnd - 1;
     while (i >= 0 && enemy[i].GetDepth() > 0) { // it's not the best way, but for some time
         enemy[i].Draw();

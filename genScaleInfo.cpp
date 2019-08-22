@@ -3,14 +3,20 @@
 
 const int MAX_FILEPATH = 1024,
           SCALEINFO_POSTFIX_SIZE = 11, //'.scaleinfo\0'
-          OBJ_FILE_NUM = 2;
+          OBJ_FILE_NUM = 4;
 const double SMALL_NUM = 1e-10;
-const char *OBJ_FILE_LIST[OBJ_FILE_NUM] = {CAR_OBJ_FILEPATH, TREE_OBJ_FILEPATH};
+const char *OBJ_FILE_LIST[OBJ_FILE_NUM] = {CAR_OBJ_FILEPATH, LOW_CAR_OBJ_FILEPATH, TREE_OBJ_FILEPATH, LOW_TREE_OBJ_FILEPATH};
+const ImageScale OBJ_SIZES[OBJ_FILE_NUM] = {
+    {CAR_WIDTH, CAR_HEIGHT, double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH},
+    {CAR_WIDTH, CAR_HEIGHT, double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH},
+    {TREE_OBJ_X, TREE_OBJ_Y, TREE_OBJ_Z},
+    {TREE_OBJ_X, TREE_OBJ_Y, TREE_OBJ_Z}
+};
 
 bool LoadObjSize(const char *filename, ImageScale &size);
 bool GenScaleFileName(const char *objFile, char *dstFile);
 bool GenScaleInfo(const char *filename);
-bool AutoGenScaleInfo(const char *filename, ImageScale sizes);
+bool AutoGenScaleInfo(const char *filename, const ImageScale &sizes);
 
 bool LoadObjSize(const char *filename, ImageScale &size) {
     std::vector <Vertex> v;
@@ -138,7 +144,7 @@ bool GenScaleInfo(const char *filename) {
     return 1;
 }
 
-bool AutoGenScaleInfo(const char *filename, ImageScale sizes) {
+bool AutoGenScaleInfo(const char *filename, const ImageScale &sizes) {
     ImageScale dflSize = {1.0, 1.0, 1.0};
     printf("\nLoading '%s'...\n", filename);
     LoadObjSize(filename, dflSize);
@@ -182,13 +188,8 @@ int main(int argc, char *argv[]) {
         }
     }
     else {
-        ImageScale sizes;
-        // car
-        sizes.x = CAR_WIDTH; sizes.y = CAR_HEIGHT; sizes.z = double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH;
-        success &= AutoGenScaleInfo(CAR_OBJ_FILEPATH, sizes);
-        // tree
-        sizes.x = TREE_OBJ_X; sizes.y = TREE_OBJ_Y; sizes.z = TREE_OBJ_Z;
-        success &= AutoGenScaleInfo(TREE_OBJ_FILEPATH, sizes);
+        for (int i = 0; i < OBJ_FILE_NUM; i++)
+            success &= AutoGenScaleInfo(OBJ_FILE_LIST[i], OBJ_SIZES[i]);
     }
 
     delete[] cmd;

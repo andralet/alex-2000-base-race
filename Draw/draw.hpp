@@ -18,6 +18,9 @@ const double ROAD_WIDTH_K = 60.0/80.0,
              TREE_OBJ_Y_K = 40.0/60.0, // just the sizes I liked most of all
              TREE_OBJ_Z_K = 47.8/80.0, // just the sizes I liked most of all
 
+             LOW_TREE_DEPTH_K = 1000.0/80.0,
+             LOW_CAR_DEPTH_K  = 1000.0/80.0,
+
              PERSPECTIVE_DEPTH_K = 10000.0 / 80.0,
              DRAW_ROAD_DEPTH_K = 1000.0 / 80.0,
              FOG_DENSITY_K = 0.00016 * 800.0,
@@ -41,6 +44,9 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define                TREE_OBJ_X (              TREE_OBJ_X_K *  WINDOW_WIDTH)
 #define                TREE_OBJ_Y (              TREE_OBJ_Y_K * WINDOW_HEIGHT)
 #define                TREE_OBJ_Z (              TREE_OBJ_Z_K *  WINDOW_WIDTH)
+
+#define            LOW_TREE_DEPTH (          LOW_TREE_DEPTH_K *  WINDOW_WIDTH)
+#define             LOW_CAR_DEPTH (          LOW_CAR_DEPTH_K *  WINDOW_WIDTH)
 
 #define         PERSPECTIVE_DEPTH (       PERSPECTIVE_DEPTH_K *  WINDOW_WIDTH)
 #define           DRAW_ROAD_DEPTH (         DRAW_ROAD_DEPTH_K *  WINDOW_WIDTH)

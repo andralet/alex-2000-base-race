@@ -1,6 +1,9 @@
 const int BASE_WINDOW_WIDTH = 800,
           BASE_WINDOW_HEIGHT = 600;
 
+GLint WINDOW_WIDTH = BASE_WINDOW_WIDTH,
+      WINDOW_HEIGHT = BASE_WINDOW_HEIGHT;
+
 const double ROAD_WIDTH_K = 60.0/80.0,
              MOVE_SPEED_K = 1.0/80.0,
              CAR_WIDTH_K = 5.0/80.0,

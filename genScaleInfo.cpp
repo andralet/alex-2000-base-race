@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "defines.hpp"
+#include "genScaleDefines.hpp"
 
 const int MAX_FILEPATH = 1024,
           SCALEINFO_POSTFIX_SIZE = 11, //'.scaleinfo\0'

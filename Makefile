@@ -15,7 +15,7 @@ AUDIO_LOG=Audio/audio.log
 default:
 	# yes, it works)
 	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(LIBS)
-	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS) $(LIBS)
+	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS)
 
 run: default
 	./$(PROGRAM)

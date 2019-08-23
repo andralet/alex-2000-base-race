@@ -15,22 +15,6 @@ void CopyList(int src, int dst) {
     } glEndList();
 }
 
-void UpdateMinMaxCoord(const Vertex &v, Vertex &minCoord, Vertex &maxCoord) {
-    if (v.x < minCoord.x)
-        minCoord.x = v.x;
-    if (v.y < minCoord.y)
-        minCoord.y = v.y;
-    if (v.z < minCoord.z)
-        minCoord.z = v.z;
-
-    if (v.x > maxCoord.x)
-        maxCoord.x = v.x;
-    if (v.y > maxCoord.y)
-        maxCoord.y = v.y;
-    if (v.z > maxCoord.z)
-        maxCoord.z = v.z;
-}
-
 bool LoadObj(const char *filename, int partNumber, const int listId[], ImageScale &dfl) {
     std::vector <Vertex> v;
     std::vector <Triangle> f;
@@ -98,15 +82,5 @@ bool LoadObj(const char *filename, int partNumber, const int listId[], ImageScal
     dfl.x = DFL_WIDTH / (maxCoord.x - minCoord.x);
     dfl.y = DFL_HEIGHT / (maxCoord.y - minCoord.y);
     dfl.z = DFL_DEPTH / (maxCoord.z - minCoord.z);
-    return 1;
-}
-
-bool LoadScaleInfo(const char *filename, ImageScale &scale) {
-    FILE *input = fopen(filename, "r");
-    if (input == NULL) {
-        fprintf(stderr, "Error: cannot open file '%s' for reading. Using default scale info.\nNote: you can try to use 'make auto-config' or 'make config' if the first didn't help\n", filename);
-        return 0;
-    }
-    fscanf(input, "%lf %lf %lf", &(scale.x), &(scale.y), &(scale.z));
     return 1;
 }

@@ -64,7 +64,7 @@ void AddCar(void) {
         FreeCarSpace();
     if (enemyEnd <= MAX_ENEMY) {
         bool isBump = 0;
-        int notCicleProgramCounter = ENEMY_CREATE_CYCLE_LIMIT;
+        int notCycleProgramCounter = ENEMY_CREATE_UNSUCCESSFUL_CYCLE_LIMIT;
         do {
             enemy[enemyEnd].ReInit();
             isBump = 0;
@@ -73,8 +73,8 @@ void AddCar(void) {
                     isBump = 1;
                     break;
                 }
-            notCicleProgramCounter--;
-        } while (isBump && notCicleProgramCounter > 0);
+            notCycleProgramCounter--;
+        } while (isBump && notCycleProgramCounter > 0);
         if (!isBump) // <=> notCicleProgramCounter > 0
             enemyEnd++;
     }

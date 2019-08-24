@@ -17,7 +17,7 @@ void UpdateMinMaxCoord(const Vertex &v, Vertex &minCoord, Vertex &maxCoord) {
 bool LoadScaleInfo(const char *filename, ImageScale &scale) {
     FILE *input = fopen(filename, "r");
     if (input == NULL) {
-        fprintf(stderr, "Error: cannot open file '%s' for reading. Using default scale info.\nNote: you can try to use 'make auto-config' or 'make config' if the first didn't help\n", filename);
+        fprintf(stderr, "Error: cannot open file '%s' for reading. Using default scale info.\nNote: you can try to use 'make auto-config' or 'make config-scales' if the first didn't solve your problem\n", filename);
         return 0;
     }
     fscanf(input, "%lf %lf %lf", &(scale.x), &(scale.y), &(scale.z));

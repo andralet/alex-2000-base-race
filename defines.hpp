@@ -18,20 +18,17 @@
     bool MOVE_AVIABLE = 1;
     const double TARGET_FPS = 65.0,
                  USEC_IN_SEC = 1000000.0;
+    bool FPS_TARGET_REACHED = 0;
 
     int score = 0;
+
+// Player/Settings/optimization.cpp
+    #include "Player/Settings/optimization.hpp"
+    void LoadOptimization(const char *filename);
+    void SetOption(FILE *input, int id);
+
 // Draw/color.cpp
-    struct Color {
-        float r, g, b;
-    };
-    #include "Draw/colors.hpp"// list of some useful colors
-    const Color NO_COLOR_CHANGE = {-1.0, -1.0, -1.0};
-    const Color SKY_COLOR    = { 89.0 / 256.0, 181.0 / 256.0, 210.0 / 256.0},
-                GROUND_COLOR = GREEN,
-                TREE_COLOR   = {195.0 / 256.0, 115.0 / 256.0,  11.0 / 256.0},
-                LEAVES_COLOR = DARK_GREEN;
-    /*std::vector <Color> COLOR_STACK;
-    int COLOR_STACK_SIZE = 0;*/
+    #include "Draw/color.hpp"
 
     bool IsEqual(const Color &a, const Color &b);
     void SetColor(const Color &color);
@@ -58,7 +55,6 @@
     void Play(void);
 
 // Draw/draw.cpp
-    const double SMALL_COORD = 1;
     void DrawRoad(void);
     void DrawGround(void);
     void DrawHelp(Color textColor, double startY);
@@ -72,6 +68,11 @@
     #include "Draw/obj.hpp"
     #include "Draw/scaleinfo.hpp"
 
+// Draw/modelinfo.cpp
+    #include "Draw/modelinfo.hpp"
+    bool LoadModelinfo(const char *filename, std::vector <PartInfo> &targetModelinfo, int &partNumber);
+    void CompileModel(std::vector <PartInfo> &modelinfo, int partLists[], const int targetList);
+
 // Draw/obj.cpp
     void CreateList(int listId, const std::vector <Vertex> &v, const std::vector <Triangle> &f);
     void CopyList(int src, int dst);
@@ -81,6 +82,9 @@
     bool LoadObj(const char *filename, int partNumber, const int listId[], ImageScale &dfl);
     #include "Draw/modelfiles.hpp"
 
+// Draw/model.hpp
+    struct Model;
+
 // Draw/compile.cpp
     const int DRAW_CAR_LIST = 1,
               DRAW_LOW_CAR_LIST = 2,
@@ -89,7 +93,11 @@
               INTERNAL_LIST_START = 1000001;
     void ScaleModel(ImageScale scale);
     int GetNewInternalList(void);
+    void CompileDefaultDrawCar(void);
+    void CompileDrawObj(ModelFilepath modelFiles, ModelInfo &modelinfo, ImageScale &scale,
+                        int drawList, void (*CompileDefaultDrawObj) (void));
     void CompileDrawCar(void);
+    void CompileDefaultDrawTree(void);
     void CompileDrawTree(void);
 
 // glut.cpp
@@ -108,10 +116,12 @@
     #include "Audio/audio.hpp"
 
 // headers
+#include "Player/Settings/optimization.cpp"
 #include "Player/hero.cpp"
 #include "play.cpp"
 #include "Draw/draw.cpp"
 #include "Draw/scaleinfo.cpp"
+#include "Draw/modelinfo.cpp"
 #include "Draw/obj.cpp"
 #include "Draw/compile.cpp"
 #include "glut.cpp"

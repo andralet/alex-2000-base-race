@@ -85,11 +85,17 @@ inline bool CanPlay(void) {
 }
 
 void Play(void) {
-    double targetFpsTime = 1.0 / TARGET_FPS;
-    double sleepTimeSec = targetFpsTime - (double(clock() - LAST_PLAY) / double(CLOCKS_PER_SEC));
-    if (sleepTimeSec > 0)
-        usleep(USEC_IN_SEC * sleepTimeSec);
-    LAST_PLAY = clock();
+    if (ENABLE_FPS_LIMIT) {
+        double targetFpsTime = 1.0 / TARGET_FPS;
+        double sleepTimeSec = targetFpsTime - (double(clock() - LAST_PLAY) / double(CLOCKS_PER_SEC));
+        if (sleepTimeSec > 0) {
+            FPS_TARGET_REACHED = 1;
+            usleep(USEC_IN_SEC * sleepTimeSec);
+        }
+        else
+            FPS_TARGET_REACHED = 0;
+        LAST_PLAY = clock();
+    }
 
     if (CanPlay()) {
         if (double(rand() % RAND_PARTS + 1) / double(RAND_PARTS) <= CAR_CHANCE) {

@@ -1,0 +1,6 @@
+DoubleBuffer 1
+Fog 1
+SetFpsLimit 1
+ShowFps 1
+LowTreeDepthK 12.5
+LowCarDepthK 12.5

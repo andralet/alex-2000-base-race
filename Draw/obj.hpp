@@ -7,7 +7,6 @@ struct Triangle {
 };
 
 const int MAX_OBJ_CMD_SIZE = 256;
-const double INF_COORD = 1e9,
-             DFL_WIDTH = 100.0,
+const double DFL_WIDTH = 100.0,
              DFL_HEIGHT = 100.0,
              DFL_DEPTH = 100.0;

@@ -27,7 +27,8 @@ void DrawRoad(void) {
 }
 
 void DrawGround(void) {
-    glDisable(GL_FOG);
+    if (ENABLE_FOG)
+        glDisable(GL_FOG);
     SetColor(GROUND_COLOR);
     glBegin(GL_QUADS);
     glVertex3f(-INF_COORD, -SMALL_COORD, EYE_DEPTH);
@@ -35,7 +36,8 @@ void DrawGround(void) {
     glVertex3f( INF_COORD, -SMALL_COORD, PERSPECTIVE_DEPTH);
     glVertex3f( INF_COORD, -SMALL_COORD, EYE_DEPTH);
     glEnd();
-    glEnable(GL_FOG);
+    if (ENABLE_FOG)
+        glEnable(GL_FOG);
 }
 
 void DrawHelp(Color textColor, double startY) {
@@ -58,18 +60,24 @@ void DrawHUD(void) {
     DrawText(0, WINDOW_HEIGHT - FONT_SIZE, printText, LIGHT_RED);
     sprintf(printText, "Speed: %.1lf kmph", CAR_SPEED * SPEED_DRAW_MUL);
     DrawText(0, WINDOW_HEIGHT - 2 * FONT_SIZE, printText, LIGHT_RED);
-    REDRAWS_PER_SEC++;
-    if (time(NULL) != LAST_TIME) {
-        if (!WAS_PAUSED) {
-            OLD_FPS = REDRAWS_PER_SEC;
+    if (SHOW_FPS) {
+        REDRAWS_PER_SEC++;
+        if (time(NULL) != LAST_TIME) {
+            if (!WAS_PAUSED) {
+                OLD_FPS = REDRAWS_PER_SEC;
+            }
+            if (!PAUSED)
+                WAS_PAUSED = 0;
+            REDRAWS_PER_SEC = 0;
+            LAST_TIME = time(NULL);
         }
-        if (!PAUSED)
-            WAS_PAUSED = 0;
-        REDRAWS_PER_SEC = 0;
-        LAST_TIME = time(NULL);
+        if (ENABLE_FPS_LIMIT)
+            sprintf(printText, "FPS: %d (%s)", OLD_FPS, ((FPS_TARGET_REACHED) ? "Target" : "Low"));
+        else
+            sprintf(printText, "FPS: %d", OLD_FPS);
+        DrawText(0, WINDOW_HEIGHT - 3 * FONT_SIZE, printText, LIGHT_RED);
     }
-    sprintf(printText, "FPS: %d", OLD_FPS);
-    DrawText(0, WINDOW_HEIGHT - 3 * FONT_SIZE, printText, LIGHT_RED);
+
     if (CRASHED) {
         sprintf(printText, "CRASHED");
         DrawText(WINDOW_WIDTH / 2 - 2.25 * FONT_SIZE, WINDOW_HEIGHT / 2, printText, LIGHT_RED);
@@ -159,6 +167,7 @@ void Display(void) {
 
     DrawHUD();
 
-    glutSwapBuffers();
+    if (ENABLE_DOUBLE_BUFFER)
+        glutSwapBuffers();
     glFinish();
 }

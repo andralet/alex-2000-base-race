@@ -3,19 +3,29 @@ LIBS_OPENGL=-l:libGL.so -l:libGLEW.so -l:libglut.a -l:libGLU.a -lX11 -lXxf86vm -
 LIBS_AUDIO=-lmpg123 -lao
 LIBS=$(LIBS_OPENGL) $(LIBS_AUDIO)
 CC=g++
+OPTIMISATION=-O2
 FLAGS=-Wall -Wextra
 PROGRAM=main
 SRC=$(PROGRAM).cpp
-CONFIG_PROGRAM=genScaleInfo
-CONFIG_AUTO_OPTION=auto
-CONFIG_SRC=$(CONFIG_PROGRAM).cpp
+CONFIG_SCALES_PROGRAM=genScaleInfo
+CONFIG_SCALES_SRC=GenScaleInfo/$(CONFIG_SCALES_PROGRAM).cpp
+CONFIG_SCALES_AUTO_OPTION=auto
+CONFIG_MODELS_PROGRAM=genModelInfo
+CONFIG_MODELS_SRC=GenModelInfo/$(CONFIG_MODELS_PROGRAM).cpp
+CONFIG_MODELS_AUTO_OPTION=auto
 AUDIO_FIFO=Audio/audio.fifo
 AUDIO_LOG=Audio/audio.log
 
-default:
+default: build-config
 	# yes, it works)
+	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(OPTIMISATION) $(LIBS)
+
+build-unoptimized: build-config
 	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(LIBS)
-	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS)
+
+build-config:
+	$(CC) $(CONFIG_SCALES_SRC) -o $(CONFIG_SCALES_PROGRAM) $(FLAGS)
+	$(CC) $(CONFIG_MODELS_SRC) -o $(CONFIG_MODELS_PROGRAM) $(FLAGS)
 
 run: default
 	./$(PROGRAM)
@@ -25,13 +35,18 @@ debug: build-debug
 
 build-debug:
 	$(CC) $(SRC) -o $(PROGRAM) $(FLAGS) $(LIBS) -g
-	$(CC) $(CONFIG_SRC) -o $(CONFIG_PROGRAM) $(FLAGS) $(LIBS) -g
+	$(CC) $(CONFIG_SCALES_SRC) -o $(CONFIG_SCALES_PROGRAM) $(FLAGS) -g
 
-config: $(CONFIG_PROGRAM)
-	./$(CONFIG_PROGRAM)
+config-scales: $(CONFIG_SCALES_PROGRAM)
+	./$(CONFIG_SCALES_PROGRAM)
 
-auto-config: $(CONFIG_PROGRAM)
-	./$(CONFIG_PROGRAM) $(CONFIG_AUTO_OPTION)
+config-models: $(CONFIG_MODELS_PROGRAM)
+	./$(CONFIG_MODELS_PROGRAM)
+
+auto-config: $(CONFIG_SCALES_PROGRAM) $(CONFIG_MODELS_PROGRAM)
+	./$(CONFIG_SCALES_PROGRAM) $(CONFIG_SCALES_AUTO_OPTION)
+	echo "\n\n"
+	./$(CONFIG_MODELS_PROGRAM) $(CONFIG_MODELS_AUTO_OPTION)
 
 clean:
 	rm ./$(PROGRAM)

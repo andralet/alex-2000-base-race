@@ -1,10 +1,7 @@
 #include "genScaleDefines.hpp"
 
-const int MAX_FILEPATH = 1024,
-          SCALEINFO_POSTFIX_SIZE = 11, //'.scaleinfo\0'
-          OBJ_FILE_NUM = 4;
-const double SMALL_NUM = 1e-10;
-const char *OBJ_FILE_LIST[OBJ_FILE_NUM] = {CAR_OBJ_FILEPATH, LOW_CAR_OBJ_FILEPATH, TREE_OBJ_FILEPATH, LOW_TREE_OBJ_FILEPATH};
+const int SCALEINFO_POSTFIX_SIZE = 11; //'.scaleinfo\0'
+const char SCALEINFO_POSTFIX[SCALEINFO_POSTFIX_SIZE] = ".scaleinfo";
 const ImageScale OBJ_SIZES[OBJ_FILE_NUM] = {
     {CAR_WIDTH, CAR_HEIGHT, double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH},
     {CAR_WIDTH, CAR_HEIGHT, double(CAR_DEPTH) / ROAD_DEPTH * DRAW_ROAD_DEPTH},
@@ -13,13 +10,12 @@ const ImageScale OBJ_SIZES[OBJ_FILE_NUM] = {
 };
 
 bool LoadObjSize(const char *filename, ImageScale &size);
-bool GenScaleFileName(const char *objFile, char *dstFile);
+bool SaveScaleInfo(const char *objFilename, const ImageScale &scale);
 bool GenScaleInfo(const char *filename);
 bool AutoGenScaleInfo(const char *filename, const ImageScale &sizes);
 
 bool LoadObjSize(const char *filename, ImageScale &size) {
-    std::vector <Vertex> v;
-    v.clear();
+    unsigned int vNumber = 0;
     FILE *input = fopen(filename, "r");
     if (input == NULL) {
         fprintf(stderr, "Error: cannot open file '%s' for reading. Cannot get default sizes.\n", filename);
@@ -40,7 +36,7 @@ bool LoadObjSize(const char *filename, ImageScale &size) {
             }
             fscanf(input, "%lf %lf %lf", &(readV.x), &(readV.y), &(readV.z));
             UpdateMinMaxCoord(readV, minCoord, maxCoord);
-            v.push_back(readV);
+            vNumber++;
         }
         else if (strcmp(cmd, "f") == 0) {
             newPart = 1;
@@ -52,7 +48,7 @@ bool LoadObjSize(const char *filename, ImageScale &size) {
                     fclose(input);
                     return 0;
                 }
-                else if ((unsigned int)(readF.vertex[i]) >= v.size()) {
+                else if ((unsigned int)(readF.vertex[i]) >= vNumber) {
                     fprintf(stderr, "Error while loading '%s': incorrect file format (not enough vertexes). Cannot get default sizes.\n", filename);
                     fclose(input);
                     return 0;
@@ -71,16 +67,21 @@ bool LoadObjSize(const char *filename, ImageScale &size) {
     return 1;
 }
 
-bool GenScaleFileName(const char *objFile, char *dstFile) {
-    int i = 0;
-    while (i < MAX_FILEPATH && objFile[i] != '.' && objFile[i] != '\0') {
-        dstFile[i] = objFile[i];
-        i++;
+bool SaveScaleInfo(const char *objFilename, const ImageScale &scale) {
+    char *dstFile = new char[MAX_FILEPATH];
+    if (!ChangeFileNameExtension(objFilename, dstFile, SCALEINFO_POSTFIX, SCALEINFO_POSTFIX_SIZE)) {
+        printf("Cannot generate output filename. Please, specify it manually: ");
+        scanf("%s", dstFile);
     }
-    if (i > MAX_FILEPATH - SCALEINFO_POSTFIX_SIZE)
+
+    FILE *output = fopen(dstFile, "w");
+    if (output == NULL) {
+        printf("Error: cannot create/clear file '%s'. Scale information not saved.\n", dstFile);
         return 0;
-    // else
-    sprintf(&(dstFile[i]), ".scaleinfo");
+    }
+    fprintf(output, "%lf %lf %lf", scale.x, scale.y, scale.z);
+    fclose(output);
+    printf("Scale info successfuly saved to '%s'\n", dstFile);
     return 1;
 }
 
@@ -126,21 +127,7 @@ bool GenScaleInfo(const char *filename) {
     } while (targetSize < SMALL_NUM);
     scale.z = targetSize / baseSize;
 
-    char *dstFile = new char[MAX_FILEPATH];
-    if (!GenScaleFileName(filename, dstFile)) {
-        printf("Cannot generate output filename. Please, specify it manually: ");
-        scanf("%s", dstFile);
-    }
-
-    FILE *output = fopen(dstFile, "w");
-    if (output == NULL) {
-        printf("Error: cannot create/clear file '%s'. Scale information not saved.\n", dstFile);
-        return 0;
-    }
-    fprintf(output, "%lf %lf %lf", scale.x, scale.y, scale.z);
-    fclose(output);
-    printf("Scale info successfuly saved to '%s'\n", dstFile);
-    return 1;
+    return SaveScaleInfo(filename, scale);
 }
 
 bool AutoGenScaleInfo(const char *filename, const ImageScale &sizes) {
@@ -151,47 +138,19 @@ bool AutoGenScaleInfo(const char *filename, const ImageScale &sizes) {
     ImageScale scale = {sizes.x / dflSize.x, sizes.y / dflSize.y, sizes.z / dflSize.z};
     printf("Scale set to (x, y, z): %.1lf, %.1lf, %.1lf\nSaving...\n", scale.x, scale.y, scale.z);
 
-    char *dstFile = new char[MAX_FILEPATH];
-    if (!GenScaleFileName(filename, dstFile)) {
-        printf("Cannot generate output filename. Please, specify it manually: ");
-        scanf("%s", dstFile);
-    }
-
-    FILE *output = fopen(dstFile, "w");
-    if (output == NULL) {
-        printf("Error: cannot create/clear file '%s'. Scale information not saved.\n", dstFile);
-        return 0;
-    }
-    fprintf(output, "%lf %lf %lf", scale.x, scale.y, scale.z);
-    fclose(output);
-    printf("Scale info successfuly saved to '%s'\n", dstFile);
-    return 1;
+    return SaveScaleInfo(filename, scale);
 }
 
 int main(int argc, char *argv[]) {
     bool success = 1;
-    char *cmd = new char[MAX_FILEPATH];
-    cmd[0] = '\0';
+
     if (argc != 2 || strcmp(argv[1], "auto") != 0) {
-        while (strcmp(cmd, "exit") != 0) {
-            printf("Specify .obj file path ('Draw/Models/<filename>')\nOr type 'all' to scale all known\nWhen everything is done type 'exit' to exit: ");
-            scanf("%s", cmd);
-            if (strcmp(cmd, "all") == 0) {
-                for (int i = 0; i < OBJ_FILE_NUM; i++)
-                    success &= GenScaleInfo(OBJ_FILE_LIST[i]);
-            }
-            else if (strcmp(cmd, "exit") == 0)
-                break;
-            else
-                success &= GenScaleInfo(cmd);
-        }
+        RunBaseConfigDialog(GenScaleInfo, success);
     }
     else {
         for (int i = 0; i < OBJ_FILE_NUM; i++)
             success &= AutoGenScaleInfo(OBJ_FILE_LIST[i], OBJ_SIZES[i]);
     }
-
-    delete[] cmd;
 
     if (success)
         printf("All scale info written successfuly.\n");

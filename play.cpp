@@ -14,18 +14,18 @@ class Car {
 
     void Move(void) {
         if (depth >= -CAR_DEPTH) {
-            depth -= CAR_SPEED; // * GetScale(depth);
+            depth -= CAR_SPEED;
             if (depth < -CAR_DEPTH)
                 score++;
         }
     }
 
-    void Draw(void) {
+    void Draw(void) const {
         if (depth >= -CAR_DEPTH)
-            DrawCar(x * WINDOW_WIDTH, depth, ENEMY_COLOR, ENEMY_LINE_COLOR);
+            DrawCar(x * WINDOW_WIDTH, depth, ENEMY_COLOR, ENEMY_LINE_COLOR, 0);
     }
 
-    bool isDangerous(void) {
+    inline bool isDangerous(void) const {
         return (depth >= -CAR_DEPTH);
     }
 
@@ -37,19 +37,20 @@ class Car {
         return depth;
     }
 
-    bool Bumps(const Hero &hero) {
+    bool Bumps(const Hero &hero) const {
         return (depth >= -CAR_DEPTH && depth <= CAR_DEPTH &&
                 x + CAR_WIDTH_K / 2.0 >= hero.GetX() - CAR_WIDTH_K / 2.0 &&
                 x - CAR_WIDTH_K / 2.0 <= hero.GetX() + CAR_WIDTH_K / 2.0);
     }
 
-    bool Bumps(const Car &car) {
+    bool Bumps(const Car &car) const {
         return (car.GetDepth() - depth >= -CAR_DEPTH && car.GetDepth() - depth <= CAR_DEPTH &&
                 x + CAR_WIDTH_K / 2.0 >= car.GetX() - CAR_WIDTH_K / 2.0 &&
                 x - CAR_WIDTH_K / 2.0 <= car.GetX() + CAR_WIDTH_K / 2.0);
     }
 } enemy[MAX_ENEMY];
 
+// Can be optimized, but don't run often enought to have to do an optimization
 void FreeCarSpace(void) {
     int firstDangerous = 0;
     while (firstDangerous < enemyEnd && !enemy[firstDangerous].isDangerous())
@@ -91,6 +92,8 @@ void Play(void) {
         if (sleepTimeSec > 0) {
             FPS_TARGET_REACHED = 1;
             usleep(USEC_IN_SEC * sleepTimeSec);
+            // for optimization checking
+            // fprintf(stderr, "%lf>>>", USEC_IN_SEC * sleepTimeSec);
         }
         else
             FPS_TARGET_REACHED = 0;

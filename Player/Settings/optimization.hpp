@@ -8,16 +8,17 @@ struct OptionDescription {
     void *data;
 };
 
-const int OPTION_NUMBER = 6,
+const int OPTION_NUMBER = 7,
           MAX_OPTION_NAME = 256;
 
 bool ENABLE_DOUBLE_BUFFER = 1,
      ENABLE_FOG = 1,
      ENABLE_FPS_LIMIT = 1, // if you fps isn't too high, you can set this option false.
-     SHOW_FPS = 1; // can give a minor speed up if disabled
+     SHOW_FPS = 1, // can give a minor speed up if disabled
+     INTERPOLATION_ENABLED = 1; // in most cases you won't need this option. You can disable it to increase perfomance
 
-double LOW_TREE_DEPTH_K = 1000.0/80.0,
-       LOW_CAR_DEPTH_K  = 1000.0/80.0;
+double LOW_TREE_DEPTH_K = 700.0/80.0,
+       LOW_CAR_DEPTH_K  = 700.0/80.0;
 
 #define            LOW_TREE_DEPTH (          LOW_TREE_DEPTH_K *  WINDOW_WIDTH)
 #define             LOW_CAR_DEPTH (          LOW_CAR_DEPTH_K *  WINDOW_WIDTH)
@@ -28,6 +29,7 @@ const OptionDescription OPTION_LIST[OPTION_NUMBER] = {
     {          "Fog", BOOLEAN, &ENABLE_FOG},
     {  "SetFpsLimit", BOOLEAN, &ENABLE_FPS_LIMIT},
     {      "ShowFps", BOOLEAN, &SHOW_FPS},
+    {"Interpolation", BOOLEAN, &INTERPOLATION_ENABLED},
     {"LowTreeDepthK",  DOUBLE, &LOW_TREE_DEPTH_K},
     { "LowCarDepthK",  DOUBLE, &LOW_CAR_DEPTH_K}
 };

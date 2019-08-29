@@ -28,7 +28,7 @@ void InitGlut(int argc, char *argv[]) {
     glutSetCursor(GLUT_CURSOR_NONE); // hiding mouse pointer inside the window
 
     if (ENABLE_FOG) {
-        GLfloat FogColor[4]={0.5, 0.5, 0.5, 1};
+        GLfloat FogColor[4]={FOG_COLOR.r, FOG_COLOR.g, FOG_COLOR.b, 1};
         glEnable(GL_FOG);
         glFogi(GL_FOG_MODE, GL_EXP2);
         glFogf(GL_FOG_DENSITY, FOG_DENSITY);
@@ -36,6 +36,11 @@ void InitGlut(int argc, char *argv[]) {
     }
 
     glEnable(GL_DEPTH_TEST);
+
+    if (INTERPOLATION_ENABLED)
+        glShadeModel(GL_SMOOTH); // It is default option, so command added just for reading comfort
+    else
+        glShadeModel(GL_FLAT);
 
     CompileDrawCar();
     CompileDrawTree();

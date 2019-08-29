@@ -7,11 +7,11 @@ GLint WINDOW_WIDTH = BASE_WINDOW_WIDTH,
 const double INF_COORD = 1e9,
              SMALL_COORD = 2.0;
 
-const double ROAD_WIDTH_K = 60.0/80.0,
+const double ROAD_WIDTH_K = 70.0/80.0,
              MOVE_SPEED_K = 1.0/80.0,
              CAR_WIDTH_K = 5.0/80.0,
-             LINE_WIDTH_K = 6.0/80.0,
-             CAR_HEIGHT_K = 6.0/60.0,
+             LINE_WIDTH_K = 7.0/80.0,
+             CAR_HEIGHT_K = 4.0/60.0,
 
              TREE_HEIGHT_K = 15.0/60.0,
              TREE_RADIUS_K = 3.0/80.0,
@@ -29,7 +29,9 @@ const double ROAD_WIDTH_K = 60.0/80.0,
              FOG_DENSITY_K = 0.00016 * 800.0,
              LINE_DEPTH_K = 5.0/80.0,
              LINE_SPACE_K = 20.0/80.0,
-             EYE_DEPTH_K = -10.0/80.0; // be careful changing it: it can be used for some distance settings (most likely for low textures)
+
+             EYE_DEPTH_K = -10.0/80.0, // be careful changing it: it can be used for some distance settings (most likely for low textures)
+             EYE_HEIGHT_K = 12.0/60.0;
 
 #define                ROAD_WIDTH (              ROAD_WIDTH_K *  WINDOW_WIDTH)
 #define                MOVE_SPEED (              MOVE_SPEED_K *  WINDOW_WIDTH)
@@ -53,7 +55,9 @@ const double ROAD_WIDTH_K = 60.0/80.0,
 #define               FOG_DENSITY (             FOG_DENSITY_K /  WINDOW_WIDTH)
 #define                LINE_DEPTH (              LINE_DEPTH_K *  WINDOW_WIDTH)
 #define                LINE_SPACE (              LINE_SPACE_K *  WINDOW_WIDTH)
+
 #define                 EYE_DEPTH (               EYE_DEPTH_K *  WINDOW_WIDTH)
+#define                EYE_HEIGHT (              EYE_HEIGHT_K * WINDOW_HEIGHT)
 
 
 const int TREE_SLICES = 10,
@@ -72,15 +76,15 @@ const int MAX_DRAW_TEXT = 128,
 const char *WINDOW_NAME = "Race (by andralet)";
 const int HELP_LINES_NUM = 4;
 const char *HELP_MESSAGE[HELP_LINES_NUM] = {
-    "Use 'A' and 'D' to move,",
-    "'ESC' to exit and 'P' to pause game.",
+    "Use 'A'('<-') and 'D'('->') to move,",
+    "'ESC' to exit and 'P'('F1') to pause game.",
     "You can pause music with 'Q' and switch tracks with 'E'.",
     "Good luck!:)"
 };
 
 const double HELP_MESSAGE_SPACE[HELP_LINES_NUM] = {
-    24.0 / 4.0 - 0.75,
-    36.0 / 4.0 - 1.75,
+    36.0 / 4.0 - 1.4,
+    42.0 / 4.0 - 2.0,
     56.0 / 4.0 - 1.4,
     12.0 / 4.0 - 0.7
 };

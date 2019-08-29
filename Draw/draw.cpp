@@ -17,9 +17,9 @@ void DrawRoad(void) {
     glVertex3f(WINDOW_WIDTH / 2, SMALL_COORD, EYE_DEPTH);
     glVertex3f(WINDOW_WIDTH / 2, SMALL_COORD, PERSPECTIVE_DEPTH);
     glEnd();
+}
 
-    // DEBUG
-    //for (double depth = -2 * TREE_DISTANCE; depth <= 2 * DRAW_ROAD_DEPTH + ENV_START_DEPTH; depth += TREE_DISTANCE) {
+void DrawTrees(void) {
     for (double depth = 2 * DRAW_ROAD_DEPTH + ENV_START_DEPTH; depth >= -2 * TREE_DISTANCE; depth -= TREE_DISTANCE) {
         DrawTree(TREE_X, depth);
         DrawTree(WINDOW_WIDTH - TREE_X, depth);
@@ -140,30 +140,25 @@ void Display(void) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //glOrtho(0, width, 0, height, -1.0, 1000.0);
     gluPerspective(120.0, double(WINDOW_WIDTH) / double(WINDOW_HEIGHT),
                    1.0, PERSPECTIVE_DEPTH);
     // Be careful: X axis is inverted now!
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt((WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, EYE_DEPTH,
-              (WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, 2 * CAR_HEIGHT, EYE_DEPTH + SMALL_COORD,
+    gluLookAt((WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, EYE_HEIGHT, EYE_DEPTH,
+              (WINDOW_WIDTH + ROAD_WIDTH) / 2.0 - hero.GetX() * WINDOW_WIDTH, EYE_HEIGHT, EYE_DEPTH + SMALL_COORD,
               0, 1, 0);
 
+    glDisable(GL_DEPTH_TEST);
     DrawGround();
     DrawRoad();
+    glEnable(GL_DEPTH_TEST);
+    DrawTrees();
 
-    int i = enemyEnd - 1;
-    while (i >= 0 && enemy[i].GetDepth() > 0) { // it's not the best way, but for some time
+    for (int i = enemyEnd - 1; i >= 0; i--)
         enemy[i].Draw();
-        i--;
-    }
     hero.Draw();
-    while (i >= 0) {
-        enemy[i].Draw();
-        i--;
-    }
 
     DrawHUD();
 
